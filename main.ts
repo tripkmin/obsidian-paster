@@ -47,6 +47,19 @@ export default class PasterPlugin extends Plugin {
 			],
 		});
 
+		// Add command for plain link paste (Alt + V)
+		this.addCommand({
+			id: "paste-as-plain-link",
+			name: "Paste as Plain Link",
+			editorCallback: (editor: Editor) => this.pasteAsPlainLink(editor),
+			hotkeys: [
+				{
+					modifiers: ["Alt"],
+					key: "v",
+				},
+			],
+		});
+
 		// Add settings tab
 		this.addSettingTab(new PasterSettingTab(this.app, this));
 	}
@@ -77,6 +90,20 @@ export default class PasterPlugin extends Plugin {
 
 		// Paste as link
 		editor.replaceSelection(`[](${convertedText})`);
+	}
+
+	async pasteAsPlainLink(editor: Editor): Promise<void> {
+		const clipboardText = await navigator.clipboard.readText();
+		if (!clipboardText) {
+			new Notice("No text in clipboard");
+			return;
+		}
+
+		// Convert YouTube Shorts URL if setting is enabled
+		const convertedText = this.convertYoutubeShortsUrl(clipboardText);
+
+		// Paste as plain link (no markdown formatting)
+		editor.replaceSelection(convertedText);
 	}
 
 	private convertYoutubeShortsUrl(url: string): string {
