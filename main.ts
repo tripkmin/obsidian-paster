@@ -1,7 +1,6 @@
 import {
 	App,
 	Editor,
-	MarkdownView,
 	Notice,
 	Plugin,
 	PluginSettingTab,
@@ -10,12 +9,10 @@ import {
 
 interface PasterPluginSettings {
 	convertYoutubeShorts: boolean;
-	convertOnDefaultPaste: boolean;
 }
 
 const DEFAULT_SETTINGS: PasterPluginSettings = {
 	convertYoutubeShorts: true,
-	convertOnDefaultPaste: true,
 };
 
 export default class PasterPlugin extends Plugin {
@@ -23,11 +20,6 @@ export default class PasterPlugin extends Plugin {
 
 	async onload() {
 		await this.loadSettings();
-
-		// Register paste event listener for default paste (Ctrl + V)
-		this.registerEvent(
-			this.app.workspace.on("editor-paste", this.handlePaste.bind(this))
-		);
 
 		// Add command for image paste (Ctrl + Shift + Alt + V)
 		this.addCommand({
@@ -57,29 +49,6 @@ export default class PasterPlugin extends Plugin {
 
 		// Add settings tab
 		this.addSettingTab(new PasterSettingTab(this.app, this));
-	}
-
-	async handlePaste(evt: ClipboardEvent, editor: Editor): Promise<void> {
-		if (
-			!this.settings.convertYoutubeShorts ||
-			!this.settings.convertOnDefaultPaste
-		) {
-			return;
-		}
-
-		const clipboardText = evt.clipboardData?.getData("text/plain");
-		if (!clipboardText) {
-			return;
-		}
-
-		// Check if it's a YouTube Shorts URL
-		const convertedText = this.convertYoutubeShortsUrl(clipboardText);
-		if (convertedText !== clipboardText) {
-			// Prevent default paste and insert converted URL
-			evt.preventDefault();
-			evt.stopPropagation();
-			editor.replaceSelection(convertedText);
-		}
 	}
 
 	async pasteAsImage(editor: Editor): Promise<void> {
@@ -169,20 +138,6 @@ class PasterSettingTab extends PluginSettingTab {
 					.setValue(this.plugin.settings.convertYoutubeShorts)
 					.onChange(async (value) => {
 						this.plugin.settings.convertYoutubeShorts = value;
-						await this.plugin.saveSettings();
-					})
-			);
-
-		new Setting(containerEl)
-			.setName("Convert on default paste (Ctrl + V)")
-			.setDesc(
-				"Convert YouTube Shorts URLs when using the default paste command (Ctrl + V)"
-			)
-			.addToggle((val) =>
-				val
-					.setValue(this.plugin.settings.convertOnDefaultPaste)
-					.onChange(async (value) => {
-						this.plugin.settings.convertOnDefaultPaste = value;
 						await this.plugin.saveSettings();
 					})
 			);
