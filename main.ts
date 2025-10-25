@@ -88,8 +88,16 @@ export default class PasterPlugin extends Plugin {
 		// Convert YouTube Shorts URL if setting is enabled
 		const convertedText = this.convertYoutubeShortsUrl(clipboardText);
 
-		// Paste as link
-		editor.replaceSelection(`[](${convertedText})`);
+		// Paste as link and position cursor between brackets
+		const linkText = `[](${convertedText})`;
+		editor.replaceSelection(linkText);
+
+		// Move cursor to position 1 (between the brackets)
+		const cursor = editor.getCursor();
+		editor.setCursor({
+			line: cursor.line,
+			ch: cursor.ch - convertedText.length - 3,
+		});
 	}
 
 	async pasteAsPlainLink(editor: Editor): Promise<void> {
