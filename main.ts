@@ -111,15 +111,43 @@ export default class PasterPlugin extends Plugin {
 			return url;
 		}
 
-		// YouTube Shorts URL 패턴 매칭 (www, m, 또는 도메인 없음 모두 포함)
+		// YouTube URL 패턴들을 모두 처리
+		// 1. YouTube Shorts: youtube.com/shorts/VIDEO_ID
 		const shortsRegex =
 			/^https?:\/\/(?:www\.|m\.)?youtube\.com\/shorts\/([a-zA-Z0-9_-]+)(\?.*)?$/;
-		const match = url.match(shortsRegex);
+		// 2. YouTube Shorts (youtu.be): youtu.be/VIDEO_ID
+		const youtuBeRegex =
+			/^https?:\/\/(?:www\.)?youtu\.be\/([a-zA-Z0-9_-]+)(\?.*)?$/;
+		// 3. YouTube watch: youtube.com/watch?v=VIDEO_ID
+		const watchRegex =
+			/^https?:\/\/(?:www\.|m\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)(&.*)?$/;
+		// 4. YouTube embed: youtube.com/embed/VIDEO_ID
+		const embedRegex =
+			/^https?:\/\/(?:www\.)?youtube\.com\/embed\/([a-zA-Z0-9_-]+)(\?.*)?$/;
 
+		// 각 패턴에 대해 매칭 시도
+		let match = url.match(shortsRegex);
 		if (match) {
 			const videoId = match[1];
-			const queryParams = match[2] || "";
-			return `https://www.youtu.be/${videoId}${queryParams}`;
+			return `https://www.youtube.com/watch?v=${videoId}`;
+		}
+
+		match = url.match(youtuBeRegex);
+		if (match) {
+			const videoId = match[1];
+			return `https://www.youtube.com/watch?v=${videoId}`;
+		}
+
+		match = url.match(watchRegex);
+		if (match) {
+			const videoId = match[1];
+			return `https://www.youtube.com/watch?v=${videoId}`;
+		}
+
+		match = url.match(embedRegex);
+		if (match) {
+			const videoId = match[1];
+			return `https://www.youtube.com/watch?v=${videoId}`;
 		}
 
 		return url;
@@ -156,9 +184,9 @@ class PasterSettingTab extends PluginSettingTab {
 		containerEl.empty();
 
 		new Setting(containerEl)
-			.setName("Convert YouTube Shorts URLs")
+			.setName("Convert YouTube URLs")
 			.setDesc(
-				"Automatically convert YouTube Shorts URLs to regular YouTube URLs for better embedding compatibility"
+				"Automatically convert all YouTube URLs (Shorts, youtu.be, embed, etc.) to standard watch format for better embedding compatibility"
 			)
 			.addToggle((val) =>
 				val
