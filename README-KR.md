@@ -15,7 +15,6 @@ Obsidian에서 링크 붙여넣기를 빠르게 하고 YouTube Shorts 임베딩 
 -   **빠른 링크 생성**: `Ctrl + Alt + V`로 `[텍스트](URL)` 형식으로 붙여넣기
 -   **빠른 이미지 링크**: `Ctrl + Shift + Alt + V`로 `![](URL)` 형식으로 붙여넣기
 -   **YouTube Shorts 수정**: `youtube.com/shorts/` URL을 적절한 임베딩을 위해 `youtu.be/` 형식으로 자동 변환
--   **스마트 기본 붙여넣기**: 일반 `Ctrl + V`에서도 YouTube Shorts URL 변환 옵션
 
 ## 설치
 
@@ -42,7 +41,6 @@ Obsidian에서 링크 붙여넣기를 빠르게 하고 YouTube Shorts 임베딩 
 **설정 → 커뮤니티 플러그인 → Obsidian Paster**로 이동:
 
 -   **Convert YouTube Shorts URLs**: 자동 변환 활성화/비활성화
--   **Convert on default paste (Ctrl + V)**: 일반 붙여넣기에서도 변환 적용
 
 ## 개발
 

@@ -17,7 +17,6 @@ A simple Obsidian plugin that makes pasting links faster and fixes YouTube Short
 -   **Quick Link Creation**: `Ctrl + Alt + V` to paste as `[text](url)` format
 -   **Quick Image Links**: `Ctrl + Shift + Alt + V` to paste as `![](url)` format
 -   **YouTube Shorts Fix**: Automatically converts `youtube.com/shorts/` URLs to `youtu.be/` format for proper embedding
--   **Smart Default Paste**: Option to convert YouTube Shorts URLs even on regular `Ctrl + V`
 
 ## Installation
 
@@ -44,7 +43,6 @@ When enabled, these URLs are automatically converted:
 Go to **Settings → Community plugins → Obsidian Paster**:
 
 -   **Convert YouTube Shorts URLs**: Enable/disable automatic conversion
--   **Convert on default paste (Ctrl + V)**: Apply conversion to regular paste as well
 
 ## Development
 
